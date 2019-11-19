@@ -119,19 +119,36 @@
         
         <div class="container">
             <div class="row">
-                <?php foreach($sellProducts as $sellproduct){ ?>
+                <?php foreach($sellProducts as $newproduct){
+                    $sellprice = 0;
+                    if($newproduct["quantumDiscount"] != null){
+                        $sellprice = $newproduct['price'] * (1 - $newproduct['quantumDiscount']/100);
+                    }
+                    
+                ?>
                 <div class="col-md-4 col-sm-8 col-10 offset-1 offset-sm-2 offset-md-0 product-item">
-                    <a href="<?php echo base_url()?>Handling/chitietsanpham/<?php echo $sellproduct['id'] ?>">
+                    <a href="<?php echo base_url()?>Handling/chitietsanpham/<?php echo $newproduct['id'] ?>">
                         <div class="ribbon">
                             <div class="ribbon-inner">SeasonalFoods</div>
                         </div>
                         <div class="img">
-                             <img width="100%" src="<?php echo base_url()?>public/images/products/<?php echo $sellproduct['image'] ?>"/>
+                             <img width="100%" src="<?php echo base_url()?>public/images/products/<?php echo $newproduct['image'] ?>"/>
                         </div>
                         <div class="product-content text-center">
-                            <h2 class="h3"><?php echo $sellproduct['name'] ?></h2>
-                            <p><?php echo number_format($sellproduct['price']) ?> đ</p>
+                            <h2 class="h3"><?php echo $newproduct['name'] ?></h2>
+                            <?php if($newproduct["quantumDiscount"] != null): ?>
+                            <span class="sellprice"><?php echo number_format($sellprice) ?> đ</span>
+                            <?php endif; ?>
+                            <span class="<?php echo ($sellprice !=0)?"line":"" ?>"><?php echo number_format($newproduct['price']) ?> đ</span>
+                            <?php if($newproduct["rrp"] > 0 && $newproduct["quantumDiscount"] == null): ?>
+                            <span class="rrp line"><?php echo number_format($newproduct['rrp']) ?> đ</span>
+                            <?php endif; ?>
                         </div>
+                        <?php if($newproduct["quantumDiscount"] != null): ?>
+                        <div class="discount-ribbon">
+                            <div class="discount-ribbon-inner">-<?php echo $newproduct['quantumDiscount'] ?>%</div>
+                        </div>
+                        <?php endif; ?>
                     </a>
                 </div>
                 <?php } ?>

@@ -11,6 +11,7 @@
         <link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>public/css/animate.css"/>
         <link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>public/css/style.css"/>
         <script src="<?php echo base_url() ?>public/js/jquery-3.3.1.min.js"></script>
+        <script src="<?php echo base_url() ?>public/js/bootstrap.min.js"></script>
         <script src="<?php echo base_url() ?>/public/js/app.js"></script>
         
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.7/css/select2.min.css" rel="stylesheet" />

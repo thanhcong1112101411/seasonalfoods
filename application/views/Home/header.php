@@ -18,7 +18,7 @@
                                 <ul class="sub-menu">
                             <li></li>
                             <li><a href="'.base_url().'Handling/thongtintaikhoan">Thông Tin Tài Khoản</a></li>
-                            <li><a href="#">Danh Sách Đơn Hàng</a></li>
+                            <li><a href="'.base_url().'Handling/danhsachdonhang">Danh Sách Đơn Hàng</a></li>
                             <li><a href="'.base_url().'Handling/logout">Đăng Xuất</a></li>
                             
                         </ul>
@@ -127,7 +127,7 @@
         function searchAction(){
             var search = $("#search-text").val();
             window.sessionStorage.setItem("search",search);
-            if(window.location.pathname != "/www/TCWEB/SeasonalFoods2/Handling/sanpham"){
+            if(window.location.pathname != "/www/seasonalfoods/Handling/sanpham"){
                 window.location.href = "<?php echo base_url() ?>Handling/sanpham";
             }
         }

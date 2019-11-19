@@ -241,7 +241,7 @@
 </script>
 <script>
     $(document).ready(function(){
-        if(document.referrer == "" || document.referrer == "http://localhost/www/TCWEB/SeasonalFoods2/Handling/sanpham"){
+        if(document.referrer == "" || document.referrer == "http://localhost:8080/www/seasonalfoods/Handling/sanpham"){
              window.sessionStorage.setItem("search","");
         }
         
