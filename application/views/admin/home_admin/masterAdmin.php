@@ -53,7 +53,7 @@
                         <li><a href="#"><span><i class="fas fa-cart-plus"></i></span>Quản Lý Banner</a></li>
                         <li><a href="<?php echo base_url() ?>admin/portfolio"><span><i class="fas fa-cart-plus"></i></span>Quản Lý Danh Mục</a></li>
                         <li><a href="<?php echo base_url() ?>admin/unit"><span><i class="fas fa-cart-plus"></i></span>Đơn Vị Tính</a></li>
-                        <li><a href="#"><span><i class="fas fa-cart-plus"></i></span>Quản Lý Đơn Hàng</a></li>
+                        <li><a href="<?php echo base_url() ?>admin/bills"><span><i class="fas fa-cart-plus"></i></span>Quản Lý Đơn Hàng</a></li>
                         <li><a href="#"><span><i class="fas fa-cart-plus"></i></span>Quản Lý Liên Hệ</a></li>
                         <li><a href="#"><span><i class="fas fa-cart-plus"></i></span>Quản Lý Bài Viết</a></li>
                         <li class="promotion"><a href="#"><span><i class="fas fa-cart-plus"></i></span>Khuyến Mãi<span><i class="fas fa-angle-down"></i></span></a>
