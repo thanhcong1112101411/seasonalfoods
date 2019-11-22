@@ -13,7 +13,7 @@ class bills extends CI_Controller {
 
 	public function index()
 	{	
-        $query = "SELECT `id_bills`, `cusName`, `phone`, `address`, `total`, `status`, 
+        $query = "SELECT `id_bills`, `cusName`, `phonenumber`, `address`, `total`, `status`, 
         create_at FROM bills, `customers` WHERE `bills`.`id_customer` = `customers`.`id_customer`";
         $data["bills"] = $this->M_data->load_query($query);
         $display["body"] = $this->load->view("admin/pages_admin/bills",$data,TRUE);

@@ -18,10 +18,10 @@
         <tr id="id<?php echo $i["id_bills"] ?>">
             <td><?php echo $i["id_bills"] ?></td>
             <td><?php echo $i["cusName"]?></td>
-            <td><?php echo $i["phone"]?></td>
+            <td><?php echo $i["phonenumber"]?></td>
             <td><?php echo $i["address"]?></td>
             <td><?php echo number_format($i["total"])?></td>
-            <td><?php echo $i["status"] == 0 ? "Đã Hủy" : "Đã Giao"?></td>
+            <td><?php echo $i["status"] == 1 ? "Đã Hủy" : "Đã Giao"?></td>
             <td><?php echo $i["create_at"]?></td>
             <td>
                 <button onclick="detail(<?php echo $i["id_bills"] ?>)" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">Chi Tiết</button>
