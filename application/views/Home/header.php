@@ -9,7 +9,7 @@
             <div class="container header-top">
                 <ul>
                     <li><button id="search"><i class="fas fa-search"></i></button></li>
-                    <li><a href="<?php echo base_url() ?>Handling/giohang"><i class="fas fa-shopping-cart"></i><span id="numbercart"><sub><?php echo isset($_SESSION["giohang"])?  count($_SESSION["giohang"]): "" ?></sub></span></a>
+                    <li><a href="<?php echo base_url() ?>Handling/giohang"><i class="fas fa-shopping-cart"></i><span id="numbercart"><sub><?php echo isset($_SESSION["giohang"])?  count($_SESSION["giohang"]): "0" ?></sub></span></a>
                         
                     </li>
                     <li id="user-li"><button id="user"><i class="fas fa-user-circle"></i></button><span id="username"><?php echo isset($_SESSION["user"])?$_SESSION["user"]["username"]:"" ?></span>
@@ -81,7 +81,8 @@
             <div class="scroll">
             <h1 class="h2 text-center">Welcome To Front</h1>
             <p class="text-center">Fill out the form to get started</p>
-            <form class="mt-5">
+            <form class="mt-5" action ="'.base_url().'Handling/signup" method = "post">
+
                 <div>
                     <span><i class="fas fa-user"></i></span>
                     <input type="text" name="username" id="username" placeholder="username"/>

@@ -1,4 +1,4 @@
-<footer>
+<!-- <footer>
             <div class="footer padding">
                 <div class="container">
                     <div class="row">
@@ -33,4 +33,4 @@
                     
                 </div>
             </div>
-        </footer>
+        </footer> -->

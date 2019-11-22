@@ -58,7 +58,7 @@ class Handling extends CI_Controller {
     }
     public function danhsachdonhang(){
         $id = $this->session->userdata("user")["id"];
-        $query = "select * from bills where id_customer = '".$id."' order by create_at";
+        $query = "select * from bills where id_customer = '".$id."' order by create_at desc";
         $data["bills"] = $this->M_data->load_query($query);
         $display["header"] = $this->load->view("Home/header",NULL,TRUE);
         $display["footer"] = $this->load->view("Home/footer",NULL,TRUE);
@@ -82,6 +82,157 @@ class Handling extends CI_Controller {
         $detailbilllist = $this->M_data->load_query($query);
         echo json_encode($detailbilllist);
     }
+    public function giohang()
+	{
+//        $this->session->unset_userdata('giohang');
+        $data['giohang'] = $this->session->userdata("giohang");
+        $display["header"] = $this->load->view("Home/header",NULL,TRUE);
+        $display["footer"] = $this->load->view("Home/footer",NULL,TRUE);
+        $display["body"] = $this->load->view("Pages/giohang",$data,TRUE);
+		$this->load->view("Home/master", $display);
+	}
+    public function dathang(){
+        
+        $id = $this->session->userdata("user")["id"];
+        $query = "select * from customers where id_customer = '".$id."'";
+        $data["customer"] = $this->M_data->load_query($query);
+        
+        $data['giohang'] = $this->session->userdata("giohang");
+        
+        $display["header"] = $this->load->view("Home/header",$data,TRUE);
+        $display["footer"] = $this->load->view("Home/footer",NULL,TRUE);
+        $display["body"] = $this->load->view("Pages/dathang",NULL,TRUE);
+		$this->load->view("Home/master", $display);
+        
+        
+    }
+    public function getAddress(){
+        function testAddress($link){
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => $link,
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "GET",
+              CURLOPT_HTTPHEADER => array(
+                "Accept: */*",
+                "Accept-Encoding: gzip, deflate",
+                "Cache-Control: no-cache",
+                "Connection: keep-alive",
+                "Host: thongtindoanhnghiep.co",
+                "Postman-Token: 9b2ef605-2ed6-47c4-886d-b4e11b1ba0e4,b4d0e121-24b4-4fcd-9ea6-d15f2b6f3cfa",
+                "User-Agent: PostmanRuntime/7.19.0",
+                "cache-control: no-cache"
+              ),
+            ));
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+            curl_close($curl);
+
+            if ($err) {
+                echo "cURL Error #:" . $err;
+            } else {
+                return $response;
+            }
+        }
+        $id = $this->session->userdata("user")["id"];
+        $query = "select * from customers where id_customer = '".$id."'";
+        $customer = $this->M_data->load_query($query);
+
+        $data["ward"] = testAddress("https://thongtindoanhnghiep.co/api/ward/".$customer[0]["ward"]);
+        $data["district"] = testAddress("https://thongtindoanhnghiep.co/api/district/".$customer[0]["district"]);
+        $data["city"] = testAddress("https://thongtindoanhnghiep.co/api/city/".$customer[0]["city"]);
+        echo json_encode($data);
+    }
+    public function getLink(){
+        $curl = curl_init();
+        $link = $this->input->post("link");
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => $link,
+        CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "GET",
+              CURLOPT_HTTPHEADER => array(
+                "Accept: */*",
+                "Accept-Encoding: gzip, deflate",
+                "Cache-Control: no-cache",
+                "Connection: keep-alive",
+                "Host: thongtindoanhnghiep.co",
+                "Postman-Token: 9b2ef605-2ed6-47c4-886d-b4e11b1ba0e4,b4d0e121-24b4-4fcd-9ea6-d15f2b6f3cfa",
+                "User-Agent: PostmanRuntime/7.19.0",
+                "cache-control: no-cache"
+              ),
+            ));
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+            curl_close($curl);
+
+            if ($err) {
+                echo "cURL Error #:" . $err;
+            } else {
+                echo $response;
+            }
+    }
+    
+    public function thanhtoan(){
+
+        $idcustomer = $this->session->userdata("user")["id"];
+        $tongtien = 0;
+        $arr_old = $this->session->userdata("giohang");
+
+        for($i=0; $i<count($arr_old); $i++){
+            if($arr_old[$i]["quantumDiscount"] != null){
+                $tongtien += ($arr_old[$i]['price'] * (1-$arr_old[$i]['quantumDiscount']/100))* $arr_old[$i]['number'];
+            }else{
+                $tongtien += $arr_old[$i]['price'] * $arr_old[$i]['number'];
+            }
+            
+        }
+        // thêm hóa đơn
+        $data = array(
+            'id_customer' => $idcustomer,
+            'total' => $tongtien
+        );
+        $id = $this->M_data->insert('bills', $data);
+        // thêm chi tiết hóa đơn
+        $dataDetail = array();
+        for($i=0; $i<count($arr_old); $i++){
+
+            $discount = 0;
+            $thanhtien = 0;
+
+            if($arr_old[$i]['quantumDiscount'] == null){
+                $discount = 0;
+                $thanhtien = $arr_old[$i]['price'] * $arr_old[$i]['number'];
+            }else{
+                $discount = $arr_old[$i]['quantumDiscount'];
+                $thanhtien = ($arr_old[$i]['price'] * (1-$arr_old[$i]['quantumDiscount']/100))* $arr_old[$i]['number'];
+            }
+
+            $detail = array(
+                'id_bill' => $id,
+                'id_product' => $arr_old[$i]['id'],
+                'price' => $arr_old[$i]['price'],
+                'quantumDiscount' => $discount,
+                'quantum' => $arr_old[$i]['number'],
+                'money' => $thanhtien
+            );
+
+            array_push($dataDetail, $detail); 
+        }
+        $this->db->insert_batch('detailbills',$dataDetail);
+        $this->session->unset_userdata('giohang');
+        return true;
+    }
+    
     public function filter(){
         $quantumProduct = 9;
         $page = (int)$this->input->post("page");
@@ -126,15 +277,7 @@ class Handling extends CI_Controller {
         $data["limit"] = $this->M_data->load_query($query);
         echo json_encode($data);
     }
-    public function giohang()
-	{
-//        $this->session->unset_userdata('giohang');
-        $data['giohang'] = $this->session->userdata("giohang");
-        $display["header"] = $this->load->view("Home/header",NULL,TRUE);
-        $display["footer"] = $this->load->view("Home/footer",NULL,TRUE);
-        $display["body"] = $this->load->view("Pages/giohang",$data,TRUE);
-		$this->load->view("Home/master", $display);
-	}
+    
     public function datthem()
 	{
         
@@ -150,7 +293,8 @@ class Handling extends CI_Controller {
                 if($arr_old[$i]['id'] == $id){
                     $arr_old[$i]['number']+=1;
                     $this->session->set_userdata("giohang",$arr_old);
-                    redirect(base_url('handling/giohang'));
+                    echo count($this->session->userdata("giohang"));
+                    exit();
                 }
             }
             
@@ -256,22 +400,57 @@ class Handling extends CI_Controller {
         }
         
     }
+    public function signup(){
+        $username = $this->input->post("username");
+
+        $password = $this->input->post("password");
+        $repassword = $this->input->post("repassword");
+        if($password != $repassword){
+            echo "<script>alert('Mật Khẩu Không Trùng Nhau'); window.location.href='../'</script>";
+            exit();
+        }
+
+        $query = "select * from accountcustomers where username = '".$username."'";
+        $dl = $this->M_data->load_query($query);
+        if(count($dl) > 0){
+            echo "<script>alert('Tài Khoản Đăng Nhập Đã Tồn Tại'); window.location.href='../'</script>";
+            exit();
+        }
+        
+        $customer["phonenumber"] = $this->input->post("phone");
+        $customer["email"] = $this->input->post("email");
+        $idCustomer = $this->M_data->insert('customers', $customer);
+
+        $account["username"] = $username;
+        $account["password"] = $password;
+        $account["id_customer"] = $idCustomer;
+        $this->db->insert('accountcustomers',$account);
+
+        $arr_user["id"] = $idCustomer;
+        $arr_user['username'] = $username;
+        $arr_user['password'] = $password;
+    
+        $this->session->set_userdata("user",$arr_user);
+        echo "<script>alert('Đăng Ký Thành Công'); window.location.href='../Handling/thongtintaikhoan'</script>";
+    }
     public function logout(){
         $this->session->unset_userdata("user");
         redirect(base_url(''));
     }
-    
-    public function dathang(){
-        
-            $id = $this->session->userdata("user")["id"];
-            $queryAddress = "select * from customers where id_customer = '".$id."'";
-            $data["customer"] = $this->M_data->load_query($queryAddress);
-        
-        
-        $display["header"] = $this->load->view("Home/header",$data,TRUE);
-        $display["footer"] = $this->load->view("Home/footer",NULL,TRUE);
-        $display["body"] = $this->load->view("Pages/dathang",NULL,TRUE);
-		$this->load->view("Home/master", $display);
+    public function updateCustomerInf(){
+        $id = $this->session->userdata("user")["id"];
+        $data["cusName"] = $this->input->post("name");
+        $data["email"] = $this->input->post("email");
+        $data["phonenumber"] = $this->input->post("phonenumber");
+        $data["address"] = $this->input->post("address");
+        $data["ward"] = $this->input->post("idWard");
+        $data["district"] = $this->input->post("idDistrict");
+        $data["city"] = $this->input->post("idCity");
+        $this->db->where('id_customer',$id);
+        $this->db->update('customers',$data);
     }
+
+    
+    
    
 }

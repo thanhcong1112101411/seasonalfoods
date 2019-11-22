@@ -65,8 +65,8 @@
             <div class="col-md-4 offset-md-8">
                 <div class="payment-content">
                     <strong>Tổng Tiền: </strong>
-                    <span id="tongtien"><?php echo ($giohang !=null)? number_format($tongtien): "0" ?></span> đ
-                    <a href="<?php echo base_url()?>Handling/dathang">Tiến Hành Đặt Hàng</a>
+                    <span id="tongtien"><?php echo ($giohang !=null)? number_format($tongtien): "0" ?> đ</span>
+                    <button class="btn-purchase" onclick="dathang()">Tiến Hành Đặt Hàng</button>
                 </div>
             </div>
         </div>
@@ -85,15 +85,19 @@
         box-shadow: 3px 3px 10px gray;
         font-size: 18px;
     }
-    .payment-content a{
+    .payment-content .btn-purchase{
         display: block;
         padding: 10px 20px;
         text-align: center;
         margin-top: 80px;
         text-decoration: none;
-        background-color: #ff424e;
+        background-color: red;
         color: #ffffff;
         font-size: 18px;
+        border: 0;
+        width: 100%;
+        cursor: pointer;
+        font-weight: 500;
     }
 </style>
 
@@ -102,9 +106,20 @@
     $(function(){
         $("header").addClass("header-fix");
     });
-    
+    function dathang(){
+        if("<?php echo isset($_SESSION["user"]) ? $_SESSION["user"]["username"] : "" ?>" == ""){
+            alert("Đăng Nhập Ngay Để Thanh Toán");
+        }else if("<?php echo count($giohang) ?>" == 0){
+            alert("Không Có Sản Phẩm Trong Giỏ Hàng!");
+        }else{
+             window.location = "<?php echo base_url() ?>Handling/dathang";
+        }
+        
+       
+    }
 </script>
 <script>
+
     function remove($id){
         $.ajax({
             url: '<?php echo base_url() ?>Handling/remove',

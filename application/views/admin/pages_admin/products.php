@@ -26,10 +26,8 @@
             <td id="discount"><?php echo ($product["quantumDiscount"] != null)?$product["quantumDiscount"]:0 ?> %</td>
             <td id="unit"><?php echo $product["unitName"] ?></td>
             <td id='portfolio'><?php echo $product["porName"] ?></td>
-<!--            <td id="hidden"><?php echo ($product["hidden"] == 0)? "có":"không" ?></td>-->
-            <td>
-                <input type="checkbox" <?php echo ($product["hidden"]==0)?"checked":"" ?> />
-            </td>
+            <td id="hidden"><?php echo ($product["hidden"] == 0)? "có":"không" ?></td>
+            
             <td>
                 <button onclick="update(<?php echo $product["id"] ?>)" class="btn btn-primary">Sửa</button>
                 <button onclick="deleteProduct(<?php echo $product["id"]?>)" class="btn btn-warning">Xóa</button>
@@ -231,9 +229,9 @@
 //                else{
 //                    $("#id"+data[0].id+" #hidden").text("không");
 //                }
-                var check = "";
+                var check = "Không";
                 if(data[0].hidden == 0){
-                    check = "checked";
+                    check = "Có";
                 }
                 var t = $('#table_id').DataTable();
                 t.row.add( [
@@ -242,10 +240,10 @@
                     data[0].name,
                     data[0].price,
                     data[0].rrp,
-                    data[0].quantumDiscount,
+                    '<p>0%</p>',
                     data[0].unitName,
                     data[0].porName,
-                    '<input type="checkbox" '+check+'  />',
+                    '<p>'+check+'</p>',
                     '<button onclick="update('+data[0].id+')" class="btn btn-primary">Sửa</button>'+
                     '<button onclick="deleteProduct('+data[0].id+')" class="btn btn-warning">Xóa</button>'
                     
