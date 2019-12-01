@@ -7,25 +7,36 @@
         <thead style="background-color: #3b9f5e;">
             <th>ID</th>
             <th colspan="2">Sản Phẩm</th>
-            <th>Giá Bán</th>
-            <th>Giá Gốc</th>
+            <th>Giá</th>
+<!--            <th>Giá Gốc</th>-->
             <th>Khuyến Mãi</th>
+            <th>Giá Bán</th>
+            <th>Số Lượng</th>
             <th>ĐVT</th>
             <th>Danh Mục</th>
+            <th>Thương Hiệu</th>
             <th>Hiển Thị</th>
             <th></th>
         </thead>
         <tbody>
-        <?php foreach($products as $product){ ?>
+        <?php foreach($products as $product){
+            $price = $product["price"];
+            if($product["quantumDiscount"] != null){
+                $price = (1-$product["quantumDiscount"]/100)* $price;
+            }
+        ?>
         <tr id="id<?php echo $product["id"] ?>">
             <td><?php echo $product["id"] ?></td>
             <td id="image"><img width="100px" src="<?php echo base_url()?>public/images/products/<?php echo $product["image"] ?>"/></td>
             <td id="name"><?php echo $product["name"] ?></td>
             <td id="price"><?php echo number_format($product["price"]) ?></td>
-            <td id ="rrp"><?php echo number_format($product["rrp"]) ?></td>
+<!--            <td id ="rrp"><?php echo number_format($product["rrp"]) ?></td>-->
             <td id="discount"><?php echo ($product["quantumDiscount"] != null)?$product["quantumDiscount"]:0 ?> %</td>
+            <td><?php echo number_format($price) ?></td>
+            <td><?php echo $product["quantityProduct"] ?></td>
             <td id="unit"><?php echo $product["unitName"] ?></td>
             <td id='portfolio'><?php echo $product["porName"] ?></td>
+            <td id="brand"><?php echo $product["brandName"] ?></td>
             <td id="hidden"><?php echo ($product["hidden"] == 0)? "có":"không" ?></td>
             
             <td>
@@ -66,6 +77,7 @@
 <!--            <form id="frm-update" method="post" enctype="multipart/form-data">-->
                 <input type="text" id="namesetting" name="name" class="form-control"/>
                 <input type="text" id="pricesetting" name="price" class="form-control"/>
+                <input type="text" id="quantitysetting" name="quantity" placeholder="số lượng" class="form-control"/>
                 <input type="file" id="imagesetting" name="image"/>
                 <p style="color: green; font-size: 18px; font-weight: 500">Đơn Vị Tính:</p>
                 <select id="unitsetting" class="form-control">
@@ -77,6 +89,11 @@
                 <select id="portfoliosetting" class="form-control">
                     <?php foreach($portfolios as $portfolio){?>
                     <option value="<?php echo $portfolio["id_portfolio"] ?>"><?php echo $portfolio["porName"] ?></option>
+                    <?php } ?>
+                </select>
+                <select id="brandsetting" class="form-control">
+                    <?php foreach($brands as $brand){?>
+                    <option value="<?php echo $brand["id_brands"] ?>"><?php echo $brand["brandName"] ?></option>
                     <?php } ?>
                 </select>
                 <p style="color: green; font-size: 18px; font-weight: 500">Hiển Thị:</p>
@@ -146,7 +163,8 @@
 <!--        <form id="frm-insert" action="<?php echo base_url() ?>admin/products/insert" method="post" enctype="multipart/form-data">-->
             <input type="text" id="namesetting" name="name" placeholder="Nhập tên sản phẩm" class="form-control"/>
             <input type="text" id="pricesetting" name="price" placeholder="Nhập giá sản phẩm" class="form-control"/>
-            <input type="text" id="rrpsetting" placeholder="Nhập Giá Gốc" class="form-control"/>
+            <input type="text" id="quantitysetting" name="quantity" placeholder="Số Lượng Sản Phẩm" class="form-control"/>
+            <input style="display:none" type="text" id="rrpsetting" placeholder="Nhập Giá Gốc" class="form-control"/>
             <input type="file" id="imagesetting" name="image"/>
             <p style="color: green; font-size: 18px; font-weight: 500">Đơn Vị Tính:</p>
 
@@ -160,6 +178,11 @@
             <select id="portfoliosetting" name="portfolio" class="form-control">
                     <?php foreach($portfolios as $portfolio){?>
                     <option value="<?php echo $portfolio["id_portfolio"] ?>"><?php echo $portfolio["porName"] ?></option>
+                    <?php } ?>
+                </select>
+            <select id="brandsetting" nname="brand" class="form-control">
+                    <?php foreach($brands as $brand){?>
+                    <option value="<?php echo $brand["id_brands"] ?>"><?php echo $brand["brandName"] ?></option>
                     <?php } ?>
                 </select>
             <p style="color: green; font-size: 18px; font-weight: 500">Hiển thị:</p>
@@ -239,10 +262,12 @@
                     '<img width="100px" src="<?php echo base_url()?>public/images/products/'+data[0].image+'"/>',
                     data[0].name,
                     data[0].price,
-                    data[0].rrp,
                     '<p>0%</p>',
+                    data[0].price,
+                    data[0].quantityProduct,
                     data[0].unitName,
                     data[0].porName,
+                    data[0].brandName,
                     '<p>'+check+'</p>',
                     '<button onclick="update('+data[0].id+')" class="btn btn-primary">Sửa</button>'+
                     '<button onclick="deleteProduct('+data[0].id+')" class="btn btn-warning">Xóa</button>'
@@ -268,6 +293,7 @@
             console.log(data);
             $(".modal-update #namesetting").val(data[0]["name"]);
             $(".modal-update #pricesetting").val(data[0]["price"]);
+            $(".modal-update #quantitysetting").val(data[0]["quantityProduct"]);
             $(".modal-update #unitsetting option").each(function(index){
                 if(data[0]["id_unit"] == $(this).val() ){
                     $(this).attr("selected","selected");
@@ -275,6 +301,11 @@
             });
             $(".modal-update #portfoliosetting option").each(function(index){
                 if(data[0]["id_por"] == $(this).val() ){
+                    $(this).attr("selected","selected");
+                }
+            });
+            $(".modal-update #brandsetting option").each(function(index){
+                if(data[0]["id_brand"] == $(this).val() ){
                     $(this).attr("selected","selected");
                 }
             });
@@ -293,8 +324,12 @@
         $('#id'+$id+" #name").text(name);
         var price = $(".modal-update #pricesetting").val();
         $('#id'+$id+" #price").text(price);
+        var quantity = $(".modal-update #quantitysetting").val();
+         $('#id'+$id+" #quantity").text(price);
+//             <input type="text" id="quantitysetting" name="quantity" class="form-control"/>
         $('#id'+$id+" #unit").text($(".modal-update #unitsetting").find(':selected').text());
         $('#id'+$id+" #portfolio").text($(".modal-update #portfoliosetting").find(':selected').text());
+        $('#id'+$id+" #brand").text($(".modal-update #brandsetting").find(':selected').text());
         $(".modal-update input[name=hidden]").each(function(index){
                 if($(this).prop("checked") == true){
                     if($(this).val() == 0){
@@ -333,12 +368,14 @@
         var form = new FormData();
         var name = $("."+modal+" #namesetting").val();
         var price = $("."+modal+" #pricesetting").val();
+        var quantity = $("."+modal+" #quantitysetting").val();
         var rrp = $("."+modal+" #rrpsetting").val();
         if(rrp == ""){
             rrp = 0;
         }
         var unit_id = $("."+modal+" #unitsetting").find(':selected').val();
         var por_id = $("."+modal+" #portfoliosetting").find(':selected').val();
+        var brand_id = $("."+modal+" #brandsetting").find(':selected').val();
         var hidden =0;
         $("."+modal+" input[name=hidden]").each(function(index){
                 if($(this).prop("checked") == true){
@@ -360,9 +397,11 @@
         }
         form.append("name",name);
         form.append("price",price);
+        form.append("quantity",quantity);
         form.append("rrp",rrp);
         form.append("unit_id",unit_id);
         form.append("por_id",por_id);
+        form.append("brand_id",brand_id);
         form.append("hidden",hidden);
         
         return form;

@@ -19,6 +19,8 @@ class products extends CI_Controller {
         $data["units"] = $this->M_data->load_query($queryUnit);
         $queryPor = "select * from portfolio";
         $data["portfolios"] = $this->M_data->load_query($queryPor);
+        $queryBrand = "select * from brand";
+        $data["brands"] = $this->M_data->load_query($queryBrand);
         $display["body"] = $this->load->view("admin/pages_admin/products",$data,TRUE);
 		$this->load->view("admin/home_admin/masterAdmin", $display);
 	}
@@ -62,7 +64,10 @@ class products extends CI_Controller {
         $data["price"] = (float)$gia;
         $rrp = $this->input->post("rrp");
         $data["rrp"] = (float)$rrp;
+        $quantity = $this->input->post("quantity");
+        $data["quantityProduct"] = (int)$quantity;
         $data["id_por"] = $this->input->post("por_id");
+        $data["id_brand"] = $this->input->post("brand_id");
         $data["description"] = $this->input->post("description");
         $data["hidden"] = $this->input->post("hidden");
         $nameImage = "unknown.png";
@@ -130,7 +135,10 @@ class products extends CI_Controller {
         $data["id_unit"] = $this->input->post("unit_id");
         $gia = $this->input->post("price");
         $data["price"] = (float)$gia;
+        $quantity = $this->input->post("quantity");
+        $data["quantityProduct"] = (int)$quantity;
         $data["id_por"] = $this->input->post("por_id");
+        $data["id_brand"] = $this->input->post("brand_id");
         $data["description"] = $this->input->post("description");
         $data["hidden"] = $this->input->post("hidden");
         $nameImage = "";

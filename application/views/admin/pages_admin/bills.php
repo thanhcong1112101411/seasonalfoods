@@ -153,8 +153,13 @@
         })
         .done(function(data){
             for (var i = 0; i < data.length; i++) {
-                  $("#table_ct tbody").append("<tr><td>" +data[i].id_product + "</td><td>" +data[i].name + "</td><td>" +data[i].quantum + "</td><td>" +data[i].price + "</td></tr>");
+                  $("#table_ct tbody").append("<tr><td>" +data[i].id_product + "</td><td>" +data[i].name + "</td><td>" +data[i].quantum + "</td><td>" +formatCurrency(data[i].money) + " đ</td></tr>");
             }
         })   
+    }
+    function formatCurrency(number){
+            var n = number.split('').reverse().join("");
+            var n2 = n.replace(/\d\d\d(?!$)/g, "$&,");    
+            return  n2.split('').reverse().join('');
     }
 </script>

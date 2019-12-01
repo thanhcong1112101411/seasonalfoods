@@ -229,8 +229,19 @@ class Handling extends CI_Controller {
             array_push($dataDetail, $detail); 
         }
         $this->db->insert_batch('detailbills',$dataDetail);
+        // cập nhật số lượng sản phẩm
+        for($i=0; $i<count($arr_old); $i++){
+            $idProduct = $arr_old[$i]['id'];
+            $query = "select * from products where id = '".$idProduct."'";
+            $result = $this->M_data->load_query($query);
+            
+            $data2["quantityProduct"] = $result[0]["quantityProduct"] - $arr_old[$i]['number'];
+            
+            $this->M_data->update($idProduct,'products',$data2);
+        }
+        
         $this->session->unset_userdata('giohang');
-        return true;
+//        return true;
     }
     
     public function filter(){

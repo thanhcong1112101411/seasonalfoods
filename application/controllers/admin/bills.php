@@ -14,7 +14,7 @@ class bills extends CI_Controller {
 	public function index()
 	{	
         $query = "SELECT `id_bills`, `cusName`, `phonenumber`, `address`, `total`, `status`, 
-        create_at FROM bills, `customers` WHERE `bills`.`id_customer` = `customers`.`id_customer`";
+        create_at FROM bills, `customers` WHERE `bills`.`id_customer` = `customers`.`id_customer` order by create_at desc";
         $data["bills"] = $this->M_data->load_query($query);
         $display["body"] = $this->load->view("admin/pages_admin/bills",$data,TRUE);
 		$this->load->view("admin/home_admin/masterAdmin", $display);
@@ -23,7 +23,7 @@ class bills extends CI_Controller {
 	public function detailBills(){
 		$id_bill = $_POST['id_bill'];
 		$query = "SELECT id_product, `name`, quantum, 
-		detailbills.price FROM detailbills, 
+		detailbills.price, detailbills.money FROM detailbills, 
 		products WHERE detailbills.`id_product` = products.`id` AND id_bill = ".$id_bill;
 		echo json_encode($this->M_data->load_query($query));
 	}

@@ -8,26 +8,26 @@
         
     </div>
     <div class="circle-main">
-        <img width="100%" src="<?php echo base_url() ?>public/images/bannerDetail/girl-3_02.jpg"/>
+        <img width="100%" height="100%" src="<?php echo base_url() ?>public/images/products/bg.png"/>
         <div class="circle-content text-center">
             <h1 class="h3 mb-4">Ain't Got Far To Go Tour Playlist</h1>
             <p>Joss-embarks on a tour of the US and Europe this fall, where she'll be listening these recent tracks </p>
             <input type="submit" value="VIEW PLAYLIST"/>
         </div>
         <div class="circle-sp circle-1 fadeInDown animated">
-            <img width="100%" src="<?php echo base_url() ?>public/images/bannerDetail/girl-2_02.jpg"/>
+            <img width="100%" src="<?php echo base_url() ?>public/images/products/6.png"/>
         </div>
         <div class="circle-sp circle-2 fadeInRight animated">
-            <img width="100%" src="<?php echo base_url() ?>public/images/bannerDetail/girl-1_03.jpg"/>
+            <img width="100%" src="<?php echo base_url() ?>public/images/products/2.png"/>
         </div>
         <div class="circle-sp circle-3 fadeInUp animated">
-            <img width="100%" src="<?php echo base_url() ?>public/images/bannerDetail/girl-4_02.jpg"/>
+            <img width="100%" src="<?php echo base_url() ?>public/images/products/3.png"/>
         </div>
         <div class="circle-sp circle-4 fadeInUp animated">
-            <img width="100%" src="<?php echo base_url() ?>public/images/bannerDetail/girl-5_02.jpg"/>
+            <img width="100%" src="<?php echo base_url() ?>public/images/products/4.png"/>
         </div>
         <div class="circle-sp circle-5 fadeInLeft animated">
-            <img width="100%" src="<?php echo base_url() ?>public/images/bannerDetail/girl-6_02.jpg"/>
+            <img width="100%" src="<?php echo base_url() ?>public/images/products/5.png"/>
         </div>
     </div>
 </div>
@@ -177,6 +177,11 @@
                     
                 <?php endif;  ?>
                 
+                <?php if($product[0]['rrp'] == 0 && $product[0]['quantumDiscount'] == null):
+                ?>
+                    <span class="price"><?php echo number_format($product[0]['price']) ?> đ</span>/<?php echo $product[0]['unitName'] ?>
+                    
+                <?php endif;  ?>
                 
             </p>
             
